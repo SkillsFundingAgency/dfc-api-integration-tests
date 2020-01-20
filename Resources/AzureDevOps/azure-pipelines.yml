@@ -29,9 +29,3 @@ stages:
         SolutionBaseName: $(SolutionBaseName).IntegrationTests
         BuildPlatform: 'any cpu'
         BuildConfiguration: 'release'
-    # Publish build artifact
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathtoPublish: '$(Build.ArtifactStagingDirectory)\Build\$(SolutionBaseName).IntegrationTests\'
-        artifactName: '$(SolutionBaseName).IntegrationTests.DeploymentPackages' 
-        publishLocation: 'Container'
