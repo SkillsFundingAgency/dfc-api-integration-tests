@@ -9,22 +9,23 @@ resources:
   - repository: dfc-devops
     type: github
     name: SkillsFundingAgency/dfc-devops
-    ref: refs/tags/v1.8.5
+    ref: refs/tags/v1.10.1
     endpoint: 'GitHub (ESFA)'
 
 stages:
 - stage: Build
-  displayName: Build, Test and Analyze
+  displayName: Build
   jobs:
-  - job: BuildTestAndAnalyze
+  - job: Build
     pool:
       name: NCS - CI and CD
       demands:
       - msbuild
       - visualstudio
     steps:
-    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
+    # Build DFC.Api.JobProfiles.IntegrationTests (no test project)
+    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-notests.yml@dfc-devops
       parameters:
-        SolutionBaseName: $(SolutionBaseName)
+        SolutionBaseName: $(SolutionBaseName).IntegrationTests
         BuildPlatform: 'any cpu'
         BuildConfiguration: 'release'
