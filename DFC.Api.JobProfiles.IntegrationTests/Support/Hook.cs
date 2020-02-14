@@ -1,4 +1,5 @@
 ﻿using DFC.Api.JobProfiles.Common.AzureServiceBusSupport;
+using DFC.Api.JobProfiles.IntegrationTests.Support.AppSettings;
 using NUnit.Framework;
 using System;
 using System.Globalization;
@@ -21,7 +22,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
             this.CanonicalName = CommonAction.RandomString(10).ToLower(CultureInfo.CurrentCulture);
 
             CommonAction.InitialiseAppSettings();
-            this.Topic = new Topic(Settings.ServiceBusConfig.Endpoint);
+            this.Topic = new Topic(Settings.ServiceBusConfig.ConnectionString);
             await CommonAction.CreateJobProfile(this.Topic, this.MessageId, this.CanonicalName).ConfigureAwait(true);
         }
 

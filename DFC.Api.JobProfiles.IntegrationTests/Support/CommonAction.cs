@@ -1,6 +1,7 @@
 ﻿using DFC.Api.JobProfiles.Common.APISupport;
 using DFC.Api.JobProfiles.Common.AzureServiceBusSupport;
 using DFC.Api.JobProfiles.IntegrationTests.Model;
+using DFC.Api.JobProfiles.IntegrationTests.Support.AppSettings;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
@@ -27,7 +28,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
         internal static void InitialiseAppSettings()
         {
             IConfigurationRoot configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
-            Settings.ServiceBusConfig.Endpoint = configuration.GetSection("ServiceBusConfig").GetSection("Endpoint").Value;
+            Settings.ServiceBusConfig.ConnectionString = configuration.GetSection("ServiceBusConfig").GetSection("Endpoint").Value;
             Settings.APIConfig.Version = configuration.GetSection("APIConfig").GetSection("Version").Value;
             Settings.APIConfig.ApimSubscriptionKey = configuration.GetSection("APIConfig").GetSection("ApimSubscriptionKey").Value;
             Settings.APIConfig.EndpointBaseUrl.ProfileDetail = configuration.GetSection("APIConfig").GetSection("EndpointBaseUrl").GetSection("ProfileDetail").Value;

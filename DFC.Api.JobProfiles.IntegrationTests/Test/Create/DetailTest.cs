@@ -1,6 +1,7 @@
 using DFC.Api.JobProfiles.Common.APISupport;
 using DFC.Api.JobProfiles.IntegrationTests.Model;
 using DFC.Api.JobProfiles.IntegrationTests.Support;
+using DFC.Api.JobProfiles.IntegrationTests.Support.AppSettings;
 using NUnit.Framework;
 using System.Globalization;
 using System.Net;

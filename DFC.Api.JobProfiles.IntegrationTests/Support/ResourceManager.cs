@@ -20,7 +20,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
 
             for (int fileIndex = 0; fileIndex < files.Length; fileIndex++)
             {
-                if (files[fileIndex].Name.ToLower().StartsWith(resourceName.ToLower()))
+                if (files[fileIndex].Name.StartsWith(resourceName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     selectedResource = files[fileIndex];
                     break;

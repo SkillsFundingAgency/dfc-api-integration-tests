@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Model
 {
-
     public class HowToBecomeData
     {
         public List<RouteEntry> RouteEntries { get; set; }

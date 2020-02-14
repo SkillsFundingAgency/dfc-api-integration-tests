@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DFC.Api.JobProfiles.IntegrationTests.Model
+﻿namespace DFC.Api.JobProfiles.IntegrationTests.Model
 {
-
     public class FurtherRoutes
     {
         public string Work { get; set; }

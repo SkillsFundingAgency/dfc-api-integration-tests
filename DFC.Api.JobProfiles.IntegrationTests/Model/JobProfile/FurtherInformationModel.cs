@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Model
 {
-
     public class FurtherInformationModel
     {
         public string CareerTips { get; set; }
