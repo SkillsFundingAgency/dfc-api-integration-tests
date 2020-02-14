@@ -1,6 +1,7 @@
 ﻿using DFC.Api.JobProfiles.Common.AzureServiceBusSupport;
 using NUnit.Framework;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Support
@@ -8,24 +9,26 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
     public class Hook
     {
         public Topic Topic { get; set; }
+
         public Guid MessageId { get; set; }
+
         public string CanonicalName { get; set; }
 
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
-            MessageId = Guid.NewGuid();
-            CanonicalName = CommonAction.RandomString(10).ToLower();
+            this.MessageId = Guid.NewGuid();
+            this.CanonicalName = CommonAction.RandomString(10).ToLower(CultureInfo.CurrentCulture);
 
             CommonAction.InitialiseAppSettings();
-            Topic = new Topic(Settings.ServiceBusConfig.Endpoint);
-            await CommonAction.CreateJobProfile(Topic, MessageId, CanonicalName);
+            this.Topic = new Topic(Settings.ServiceBusConfig.Endpoint);
+            await CommonAction.CreateJobProfile(this.Topic, this.MessageId, this.CanonicalName).ConfigureAwait(true);
         }
 
         [OneTimeTearDown]
         public async Task OneTimeTearDown()
         {
-            await CommonAction.DeleteJobProfileWithId(Topic, MessageId);
+            await CommonAction.DeleteJobProfileWithId(this.Topic, this.MessageId).ConfigureAwait(true);
         }
     }
 }

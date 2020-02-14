@@ -2,6 +2,7 @@ using DFC.Api.JobProfiles.Common.APISupport;
 using DFC.Api.JobProfiles.IntegrationTests.Model;
 using DFC.Api.JobProfiles.IntegrationTests.Support;
 using NUnit.Framework;
+using System.Globalization;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -12,21 +13,21 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test.Create
         [Test]
         public async Task ResponseCode200()
         {
-            Response<JobProfileDetailsAPIResponse> authorisedAPIResponseWithContent = await CommonAction.ExecuteGetRequest<JobProfileDetailsAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileDetail + CanonicalName);
+            Response<JobProfileDetailsAPIResponse> authorisedAPIResponseWithContent = await CommonAction.ExecuteGetRequest<JobProfileDetailsAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileDetail + this.CanonicalName).ConfigureAwait(true);
             Assert.AreEqual(HttpStatusCode.OK, authorisedAPIResponseWithContent.HttpStatusCode);
         }
 
         [Test]
         public async Task ResponseCode204()
         {
-            Response<JobProfileDetailsAPIResponse> authorisedAPIResponseNoContent = await CommonAction.ExecuteGetRequest<JobProfileDetailsAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileDetail + CommonAction.RandomString(10).ToLower());
+            Response<JobProfileDetailsAPIResponse> authorisedAPIResponseNoContent = await CommonAction.ExecuteGetRequest<JobProfileDetailsAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileDetail + CommonAction.RandomString(10).ToLower(CultureInfo.CurrentCulture)).ConfigureAwait(true);
             Assert.AreEqual(HttpStatusCode.NoContent, authorisedAPIResponseNoContent.HttpStatusCode);
         }
 
         [Test]
         public async Task ResponseCode401()
         {
-            Response<JobProfileDetailsAPIResponse> unauthorisedAPIResponse = await CommonAction.ExecuteGetRequest<JobProfileDetailsAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileDetail + CanonicalName, false);
+            Response<JobProfileDetailsAPIResponse> unauthorisedAPIResponse = await CommonAction.ExecuteGetRequest<JobProfileDetailsAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileDetail + this.CanonicalName, false).ConfigureAwait(true);
             Assert.AreEqual(HttpStatusCode.Unauthorized, unauthorisedAPIResponse.HttpStatusCode);
         }
     }

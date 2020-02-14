@@ -5,6 +5,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
     public class Settings
     {
         public static TimeSpan DeploymentWaitInMinutes { get; set; }
+
         public static TimeSpan GracePeriod { get; set; }
 
         public class ServiceBusConfig
@@ -15,12 +16,15 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
         public class APIConfig
         {
             public static string Version { get; set; }
+
             public static string ApimSubscriptionKey { get; set; }
 
             public class EndpointBaseUrl
             {
                 public static string ProfileDetail { get; set; }
+
                 public static string ProfileSearch { get; set; }
+
                 public static string ProfileSummary { get; set; }
             }
         }
