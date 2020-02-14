@@ -35,6 +35,8 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
             Settings.APIConfig.EndpointBaseUrl.ProfileSummary = Configuration.GetSection("APIConfig").GetSection("EndpointBaseUrl").GetSection("ProfileSummary").Value;
             if (!int.TryParse(Configuration.GetSection("GracePeriodInSeconds").Value, out int gracePeriodInSeconds)) { throw new InvalidCastException("Unable to retrieve an integer value for the grace period setting"); }
             Settings.GracePeriod = TimeSpan.FromSeconds(gracePeriodInSeconds);
+            if (!int.TryParse(Configuration.GetSection("DeploymentWaitInMinutes").Value, out int deploymentWaitInMinutes)) { throw new InvalidCastException("Unable to retrieve an integer value for the deployment wait setting"); }
+            Settings.DeploymentWaitInMinutes = TimeSpan.FromMinutes(deploymentWaitInMinutes);
         }
 
         private static byte[] ConvertObjectToByteArray(object obj)

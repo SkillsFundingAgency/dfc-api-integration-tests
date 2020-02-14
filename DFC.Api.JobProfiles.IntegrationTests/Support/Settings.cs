@@ -4,6 +4,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
 {
     public class Settings
     {
+        public static TimeSpan DeploymentWaitInMinutes { get; set; }
         public static TimeSpan GracePeriod { get; set; }
 
         public class ServiceBusConfig
