@@ -1,4 +1,4 @@
-﻿namespace DFC.Api.JobProfiles.IntegrationTests.Model.APIResponse
+﻿namespace DFC.Api.JobProfiles.IntegrationTests.Model.DetailsAPIResponse
 {
     public class WorkingEnvironment
     {

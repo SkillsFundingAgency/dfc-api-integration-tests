@@ -51,7 +51,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
 
         internal static async Task DeleteJobProfileWithId(Topic topic, Guid jobProfileId)
         {
-            JobProfileDeleteMessageBody messageBody = ResourceManager.GetResource<JobProfileDeleteMessageBody>("JobProfileDeleteMessageBody");
+            JobProfileContentType messageBody = ResourceManager.GetResource<JobProfileContentType>("JobProfileDelete");
             messageBody.JobProfileId = jobProfileId.ToString();
             Message deleteMessage = CommonAction.CreateDeleteMessage(jobProfileId, CommonAction.ConvertObjectToByteArray(messageBody));
             await topic.SendAsync(deleteMessage).ConfigureAwait(true);
@@ -59,7 +59,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
 
         internal static async Task CreateJobProfile(Topic topic, Guid messageId, string canonicalName)
         {
-            JobProfileContentType messageBody = ResourceManager.GetResource<JobProfileContentType>("JobProfileCreateMessageBody");
+            JobProfileContentType messageBody = ResourceManager.GetResource<JobProfileContentType>("JobProfileCreate");
             messageBody.JobProfileId = messageId.ToString();
             messageBody.UrlName = canonicalName;
             messageBody.CanonicalName = canonicalName;

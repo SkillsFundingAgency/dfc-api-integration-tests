@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Support
 {
-    public class Hook
+    public class SetUpAndTearDown
     {
         public Topic Topic { get; set; }
 

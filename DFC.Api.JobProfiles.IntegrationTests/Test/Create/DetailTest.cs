@@ -1,6 +1,5 @@
 using DFC.Api.JobProfiles.Common.APISupport;
-using DFC.Api.JobProfiles.IntegrationTests.Model;
-using DFC.Api.JobProfiles.IntegrationTests.Model.APIResponse;
+using DFC.Api.JobProfiles.IntegrationTests.Model.DetailsAPIResponse;
 using DFC.Api.JobProfiles.IntegrationTests.Support;
 using DFC.Api.JobProfiles.IntegrationTests.Support.AppSettings;
 using NUnit.Framework;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Test.Create
 {
-    public class DetailTest : Hook
+    public class DetailTest : SetUpAndTearDown
     {
         [Test]
         public async Task ResponseCode200()

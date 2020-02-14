@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
+namespace DFC.Api.JobProfiles.IntegrationTests.Model.SummaryAPIResponse
 {
-    public class JobProfileSummaryAPIResponse
+    public class JobSummary
     {
         public string Url { get; set; }
 
