@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DFC.Api.JobProfiles.IntegrationTests.Model
+namespace DFC.Api.JobProfiles.IntegrationTests.Model.APIResponse
 {
-    public class JobProfileDetailsAPIResponse
+    public class JobDetails
     {
         public string Title { get; set; }
 

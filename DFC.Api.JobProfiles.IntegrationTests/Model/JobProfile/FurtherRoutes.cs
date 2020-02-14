@@ -1,4 +1,4 @@
-﻿namespace DFC.Api.JobProfiles.IntegrationTests.Model
+﻿namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 {
     public class FurtherRoutes
     {
