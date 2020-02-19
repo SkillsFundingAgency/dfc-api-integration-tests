@@ -5,9 +5,9 @@ using NUnit.Framework;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace DFC.Api.JobProfiles.IntegrationTests.Test.Create
+namespace DFC.Api.JobProfiles.IntegrationTests.Test
 {
-    public class DetailTest : Hook
+    public class DetailTest : JobProfileCreateHook
     {
         [Test]
         public async Task ResponseCode200()
