@@ -1,6 +1,6 @@
 ﻿namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 {
-    public class WorkingHoursDetail
+    public class HiddenAlternativeTitle
     {
         public string Id { get; set; }
 

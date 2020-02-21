@@ -21,7 +21,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 
         public string DigitalSkillsLevel { get; set; }
 
-        public List<object> Restrictions { get; set; }
+        public List<Restriction> Restrictions { get; set; }
 
         public string OtherRequirements { get; set; }
 
@@ -39,13 +39,13 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 
         public List<WorkingPattern> WorkingPattern { get; set; }
 
-        public List<object> WorkingPatternDetails { get; set; }
+        public List<WorkingPatternDetail> WorkingPatternDetails { get; set; }
 
         public List<WorkingHoursDetail> WorkingHoursDetails { get; set; }
 
-        public List<object> HiddenAlternativeTitle { get; set; }
+        public List<HiddenAlternativeTitle> HiddenAlternativeTitle { get; set; }
 
-        public List<object> JobProfileSpecialism { get; set; }
+        public List<JobProfileSpecialism> JobProfileSpecialism { get; set; }
 
         public bool IsImported { get; set; }
 
@@ -55,9 +55,9 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 
         public SocCodeData SocCodeData { get; set; }
 
-        public List<object> RelatedCareersData { get; set; }
+        public List<RelatedCareersData> RelatedCareersData { get; set; }
 
-        public List<object> SocSkillsMatrixData { get; set; }
+        public List<SocSkillsMatrixData> SocSkillsMatrixData { get; set; }
 
         public List<JobProfileCategory> JobProfileCategories { get; set; }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
+﻿namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 {
     public class JobProfileCategory
     {

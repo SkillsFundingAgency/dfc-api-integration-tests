@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 {
@@ -6,14 +8,14 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
     {
         public int RouteName { get; set; }
 
-        public List<object> EntryRequirements { get; set; }
+        public List<EntryRequirement> EntryRequirements { get; set; }
 
-        public List<object> MoreInformationLinks { get; set; }
+        public List<MoreInformationLink> MoreInformationLinks { get; set; }
 
         public string RouteSubjects { get; set; }
 
         public string FurtherRouteInformation { get; set; }
 
-        public object RouteRequirement { get; set; }
+        public string RouteRequirement { get; set; }
     }
 }

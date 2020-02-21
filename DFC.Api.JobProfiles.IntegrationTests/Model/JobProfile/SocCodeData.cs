@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 {
@@ -14,7 +16,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 
         public string UrlName { get; set; }
 
-        public List<ApprenticeshipFramework> ApprenticeshipFramework { get; set; }
+        public List<object> ApprenticeshipFramework { get; set; }
 
         public List<ApprenticeshipStandard> ApprenticeshipStandards { get; set; }
     }

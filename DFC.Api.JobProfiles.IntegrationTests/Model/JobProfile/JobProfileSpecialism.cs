@@ -1,6 +1,6 @@
 ﻿namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 {
-    public class ApprenticeshipFramework
+    public class JobProfileSpecialism
     {
         public string Id { get; set; }
 

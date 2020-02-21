@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 {
@@ -13,6 +12,6 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 
         public string IntroText { get; set; }
 
-        public List<object> Registrations { get; set; }
+        public List<Registration> Registrations { get; set; }
     }
 }
