@@ -6,7 +6,6 @@ using DFC.Api.JobProfiles.IntegrationTests.Support.CommonAction.Interface;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -15,9 +14,17 @@ using System.Threading.Tasks;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Support.Common
 {
-    public class CommonAction : IGeneralSupport, IJobProfileSupport
+    public class CommonAction : IGeneralSupport, IJobProfileSupport, IAPISupport
     {
         private static readonly Random Random = new Random();
+
+        public CommonAction()
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
+            this.Settings = configuration.Get<Settings>();
+        }
+
+        private Settings Settings { get; set; }
 
         public string RandomString(int length)
         {
@@ -26,27 +33,9 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support.Common
               .Select(s => s[Random.Next(s.Length)]).ToArray());
         }
 
-        public void InitialiseAppSettings()
+        public Settings GetAppSettings()
         {
-            IConfigurationRoot configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
-            Settings.ServiceBusConfig.ConnectionString = configuration.GetSection("ServiceBusConfig").GetSection("Endpoint").Value;
-            Settings.APIConfig.Version = configuration.GetSection("APIConfig").GetSection("Version").Value;
-            Settings.APIConfig.ApimSubscriptionKey = configuration.GetSection("APIConfig").GetSection("ApimSubscriptionKey").Value;
-            Settings.APIConfig.EndpointBaseUrl.ProfileDetail = configuration.GetSection("APIConfig").GetSection("EndpointBaseUrl").GetSection("ProfileDetail").Value;
-            Settings.APIConfig.EndpointBaseUrl.ProfileSearch = configuration.GetSection("APIConfig").GetSection("EndpointBaseUrl").GetSection("ProfileSearch").Value;
-            Settings.APIConfig.EndpointBaseUrl.ProfileSummary = configuration.GetSection("APIConfig").GetSection("EndpointBaseUrl").GetSection("ProfileSummary").Value;
-            if (!int.TryParse(configuration.GetSection("GracePeriodInSeconds").Value, out int gracePeriodInSeconds))
-            {
-                throw new InvalidCastException("Unable to retrieve an integer value for the grace period setting");
-            }
-
-            Settings.GracePeriod = TimeSpan.FromSeconds(gracePeriodInSeconds);
-            if (!int.TryParse(configuration.GetSection("DeploymentWaitInMinutes").Value, out int deploymentWaitInMinutes))
-            {
-                throw new InvalidCastException("Unable to retrieve an integer value for the deployment wait setting");
-            }
-
-            Settings.DeploymentWaitInMinutes = TimeSpan.FromMinutes(deploymentWaitInMinutes);
+            return this.Settings;
         }
 
         public async Task DeleteJobProfileWithId(Topic topic, Guid jobProfileId)
@@ -67,25 +56,22 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support.Common
             await topic.SendAsync(message).ConfigureAwait(true);
         }
 
-        public async Task<Response<T>> ExecuteGetRequest<T>(string endpoint, bool authoriseRequest = true)
+        public async Task<Response<T>> ExecuteGetRequest<T>(string endpoint, string apimSubscriptionKey = null)
         {
+            string apimKey = apimSubscriptionKey;
+            if (apimKey == null)
+            {
+                apimKey = this.Settings.APIConfig.ApimSubscriptionKey;
+            }
+
             GetRequest getRequest = new GetRequest(endpoint);
-            getRequest.AddVersionHeader(Settings.APIConfig.Version);
-
-            if (authoriseRequest)
-            {
-                getRequest.AddApimKeyHeader(Settings.APIConfig.ApimSubscriptionKey);
-            }
-            else
-            {
-                getRequest.AddApimKeyHeader(this.RandomString(20).ToLower(CultureInfo.CurrentCulture));
-            }
-
+            getRequest.AddVersionHeader(this.Settings.APIConfig.Version);
+            getRequest.AddApimKeyHeader(apimKey);
             await Task.Delay(5000).ConfigureAwait(true);
             Response<T> response = getRequest.Execute<T>();
 
             DateTime startTime = DateTime.Now;
-            while (response.HttpStatusCode.Equals(HttpStatusCode.NoContent) && DateTime.Now - startTime < Settings.GracePeriod)
+            while (response.HttpStatusCode.Equals(HttpStatusCode.NoContent) && DateTime.Now - startTime < TimeSpan.FromSeconds(this.Settings.GracePeriod))
             {
                 await Task.Delay(500).ConfigureAwait(true);
                 response = getRequest.Execute<T>();

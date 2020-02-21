@@ -14,14 +14,14 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
         [Test]
         public async Task ResponseCode200()
         {
-            Response<List<JobSummary>> authorisedAPIResponseWithContent = await this.CommonAction.ExecuteGetRequest<List<JobSummary>>(Settings.APIConfig.EndpointBaseUrl.ProfileSummary).ConfigureAwait(true);
+            Response<List<JobSummary>> authorisedAPIResponseWithContent = await this.CommonAction.ExecuteGetRequest<List<JobSummary>>(this.Settings.APIConfig.EndpointBaseUrl.ProfileSummary).ConfigureAwait(true);
             Assert.AreEqual(HttpStatusCode.OK, authorisedAPIResponseWithContent.HttpStatusCode);
         }
 
         [Test]
         public async Task ResponseCode401()
         {
-            Response<List<JobSummary>> unauthorisedAPIResponse = await this.CommonAction.ExecuteGetRequest<List<JobSummary>>(Settings.APIConfig.EndpointBaseUrl.ProfileSummary, false).ConfigureAwait(true);
+            Response<List<JobSummary>> unauthorisedAPIResponse = await this.CommonAction.ExecuteGetRequest<List<JobSummary>>(this.Settings.APIConfig.EndpointBaseUrl.ProfileSummary, "InvalidKey").ConfigureAwait(true);
             Assert.AreEqual(HttpStatusCode.Unauthorized, unauthorisedAPIResponse.HttpStatusCode);
         }
     }

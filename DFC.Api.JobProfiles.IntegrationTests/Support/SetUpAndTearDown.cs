@@ -9,6 +9,8 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
 {
     public class SetUpAndTearDown
     {
+        public Settings Settings { get; set; }
+
         public Topic Topic { get; set; }
 
         public Guid WakeUpMessageId { get; set; }
@@ -17,17 +19,18 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
 
         public string CanonicalName { get; set; }
 
-        public Common.CommonAction CommonAction { get; set; } = new Common.CommonAction();
+        public Common.CommonAction CommonAction { get; set; }
 
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
-            this.CommonAction.InitialiseAppSettings();
-            this.Topic = new Topic(Settings.ServiceBusConfig.ConnectionString);
+            this.CommonAction = new Common.CommonAction();
+            this.Settings = this.CommonAction.GetAppSettings();
+            this.Topic = new Topic(this.Settings.ServiceBusConfig.ConnectionString);
             string wakeUpCanonicalName = this.CommonAction.RandomString(10).ToLower(CultureInfo.CurrentCulture);
             this.WakeUpMessageId = Guid.NewGuid();
             await this.CommonAction.CreateJobProfile(this.Topic, this.WakeUpMessageId, wakeUpCanonicalName).ConfigureAwait(true);
-            await Task.Delay(Settings.DeploymentWaitInMinutes).ConfigureAwait(true);
+            await Task.Delay(TimeSpan.FromMinutes(this.Settings.DeploymentWaitInMinutes)).ConfigureAwait(true);
             this.MessageId = Guid.NewGuid();
             this.CanonicalName = this.CommonAction.RandomString(10).ToLower(CultureInfo.CurrentCulture);
             await this.CommonAction.CreateJobProfile(this.Topic, this.MessageId, this.CanonicalName).ConfigureAwait(true);

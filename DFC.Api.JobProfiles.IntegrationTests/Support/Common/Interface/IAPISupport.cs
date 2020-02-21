@@ -5,6 +5,6 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support.CommonAction.Interface
 {
     internal interface IAPISupport
     {
-        Task<Response<T>> ExecuteGetRequest<T>(string endpoint, bool authoriseRequest = true);
+        Task<Response<T>> ExecuteGetRequest<T>(string endpoint, string apimSubscriptionKey);
     }
 }

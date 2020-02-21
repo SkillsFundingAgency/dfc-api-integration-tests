@@ -6,6 +6,6 @@
 
         public string ApimSubscriptionKey { get; set; }
 
-        public EndpointBaseUrl EndpointBaseUrl { get; } = new EndpointBaseUrl();
+        public EndpointBaseUrl EndpointBaseUrl { get; set; } = new EndpointBaseUrl();
     }
 }

@@ -2,14 +2,14 @@
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Support.AppSettings
 {
-    public static class Settings
+    public class Settings
     {
-        public static TimeSpan DeploymentWaitInMinutes { get; set; }
+        public int DeploymentWaitInMinutes { get; set; }
 
-        public static TimeSpan GracePeriod { get; set; }
+        public int GracePeriod { get; set; }
 
-        public static APIConfig APIConfig { get; } = new APIConfig();
+        public APIConfig APIConfig { get; set; } = new APIConfig();
 
-        public static ServiceBusConfig ServiceBusConfig { get; } = new ServiceBusConfig();
+        public ServiceBusConfig ServiceBusConfig { get; set; }
     }
 }
