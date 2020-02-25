@@ -4,6 +4,7 @@ using DFC.Api.JobProfiles.IntegrationTests.Model;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -91,7 +92,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
         {
             GetRequest getRequest = new GetRequest(endpoint);
             getRequest.AddVersionHeader(Settings.APIConfig.Version);
-
+            
             if(AuthoriseRequest)
             {
                 getRequest.AddApimKeyHeader(Settings.APIConfig.ApimSubscriptionKey);
@@ -105,6 +106,35 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
 
             DateTime startTime = DateTime.Now;
             while(response.HttpStatusCode.Equals(HttpStatusCode.NoContent) && DateTime.Now - startTime < Settings.GracePeriod)
+            {
+                await Task.Delay(500);
+                response = getRequest.Execute<T>();
+            }
+
+            return response;
+        }
+
+        internal async static Task<Response<T>> ExecuteGetRequest<T>(string endpoint, List<KeyValuePair<string, string>> queryParams, bool AuthoriseRequest = true)
+        {
+            GetRequest getRequest = new GetRequest(endpoint);
+            getRequest.AddVersionHeader(Settings.APIConfig.Version);
+
+            foreach (var item in queryParams) getRequest.AddQueryParameter(item.Key, item.Value);
+
+            if (AuthoriseRequest)
+            {
+                getRequest.AddApimKeyHeader(Settings.APIConfig.ApimSubscriptionKey);
+            }
+            else
+            {
+                getRequest.AddApimKeyHeader(RandomString(20).ToLower());
+            }
+
+            await Task.Delay(5000); //This needs removing once DFC-11492 has been fixed.
+            Response<T> response = getRequest.Execute<T>();
+
+            DateTime startTime = DateTime.Now;
+            while (response.HttpStatusCode.Equals(HttpStatusCode.NoContent) && DateTime.Now - startTime < Settings.GracePeriod)
             {
                 await Task.Delay(500);
                 response = getRequest.Execute<T>();

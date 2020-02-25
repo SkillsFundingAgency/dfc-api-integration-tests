@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace DFC.Api.JobProfiles.IntegrationTests.Test.Create
+namespace DFC.Api.JobProfiles.IntegrationTests.Test
 {
-    public class SummaryTest : Hook
+    public class SummaryTest : JobProfileCreateHook
     {
         [Test]
         public async Task ResponseCode200()
