@@ -26,7 +26,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
         {
             this.CommonAction = new Common.CommonAction();
             this.Settings = this.CommonAction.GetAppSettings();
-            this.Topic = new Topic(this.Settings.ServiceBusConfig.ConnectionString);
+            this.Topic = new Topic(this.Settings.ServiceBusConfig.Endpoint);
             string wakeUpCanonicalName = this.CommonAction.RandomString(10).ToLower(CultureInfo.CurrentCulture);
             this.WakeUpMessageId = Guid.NewGuid();
             await this.CommonAction.CreateJobProfile(this.Topic, this.WakeUpMessageId, wakeUpCanonicalName).ConfigureAwait(true);

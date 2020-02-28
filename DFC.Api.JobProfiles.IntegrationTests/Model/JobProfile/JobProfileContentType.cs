@@ -29,13 +29,13 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 
         public string CourseKeywords { get; set; }
 
-        public double MinimumHours { get; set; }
+        public double? MinimumHours { get; set; }
 
-        public double MaximumHours { get; set; }
+        public double? MaximumHours { get; set; }
 
-        public double SalaryStarter { get; set; }
+        public double? SalaryStarter { get; set; }
 
-        public double SalaryExperienced { get; set; }
+        public double? SalaryExperienced { get; set; }
 
         public List<WorkingPattern> WorkingPattern { get; set; }
 
@@ -47,7 +47,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 
         public List<JobProfileSpecialism> JobProfileSpecialism { get; set; }
 
-        public bool IsImported { get; set; }
+        public bool? IsImported { get; set; }
 
         public HowToBecomeData HowToBecomeData { get; set; }
 
@@ -67,6 +67,6 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Model.JobProfile
 
         public string WidgetContentTitle { get; set; }
 
-        public bool IncludeInSitemap { get; set; }
+        public bool? IncludeInSitemap { get; set; }
     }
 }

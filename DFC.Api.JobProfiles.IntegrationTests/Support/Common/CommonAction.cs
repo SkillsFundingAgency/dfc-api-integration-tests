@@ -6,6 +6,7 @@ using DFC.Api.JobProfiles.IntegrationTests.Support.CommonAction.Interface;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -56,24 +57,32 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support.Common
             await topic.SendAsync(message).ConfigureAwait(true);
         }
 
-        public async Task<Response<T>> ExecuteGetRequest<T>(string endpoint, string apimSubscriptionKey = null)
+        public async Task<Response<T>> ExecuteGetRequest<T>(string endpoint, List<KeyValuePair<string, string>> queryParams, bool authoriseRequest = true)
         {
-            string apimKey = apimSubscriptionKey;
-            if (apimKey == null)
-            {
-                apimKey = this.Settings.APIConfig.ApimSubscriptionKey;
-            }
-
             GetRequest getRequest = new GetRequest(endpoint);
             getRequest.AddVersionHeader(this.Settings.APIConfig.Version);
-            getRequest.AddApimKeyHeader(apimKey);
-            await Task.Delay(5000).ConfigureAwait(true);
+
+            foreach (var item in queryParams)
+            {
+                getRequest.AddQueryParameter(item.Key, item.Value);
+            }
+
+            if (authoriseRequest)
+            {
+                getRequest.AddApimKeyHeader(this.Settings.APIConfig.ApimSubscriptionKey);
+            }
+            else
+            {
+                getRequest.AddApimKeyHeader(this.RandomString(20).ToLowerInvariant());
+            }
+
+            await Task.Delay(5000).ConfigureAwait(false);
             Response<T> response = getRequest.Execute<T>();
 
             DateTime startTime = DateTime.Now;
             while (response.HttpStatusCode.Equals(HttpStatusCode.NoContent) && DateTime.Now - startTime < TimeSpan.FromSeconds(this.Settings.GracePeriod))
             {
-                await Task.Delay(500).ConfigureAwait(true);
+                await Task.Delay(500).ConfigureAwait(false);
                 response = getRequest.Execute<T>();
             }
 
