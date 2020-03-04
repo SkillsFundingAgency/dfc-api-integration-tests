@@ -2,6 +2,7 @@
 using DFC.Api.JobProfiles.Common.AzureServiceBusSupport;
 using DFC.Api.JobProfiles.IntegrationTests.Model;
 using DFC.Api.JobProfiles.IntegrationTests.Model.ContentType;
+using DFC.Api.JobProfiles.IntegrationTests.Model.ContentType.JobProfile;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
@@ -73,7 +74,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
 
         internal async static Task DeleteJobProfileWithId(Topic topic, Guid jobProfileId)
         {
-            JobProfileDeleteMessageBody messageBody = ResourceManager.GetResource<JobProfileDeleteMessageBody>("JobProfileDeleteMessageBody");
+            JobProfileContentType messageBody = ResourceManager.GetResource<JobProfileContentType>("JobProfileDeleteMessageBody");
             messageBody.JobProfileId = jobProfileId.ToString();
             Message deleteMessage = CommonAction.CreateDeleteMessage(jobProfileId, CommonAction.ConvertObjectToByteArray(messageBody));
             await topic.SendAsync(deleteMessage);
@@ -81,7 +82,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
 
         internal async static Task CreateJobProfile(Topic topic, Guid messageId, string canonicalName)
         {
-            JobProfileCreateMessageBody messageBody = ResourceManager.GetResource<JobProfileCreateMessageBody>("JobProfileCreateMessageBody");
+            JobProfileContentType messageBody = ResourceManager.GetResource<JobProfileContentType>("JobProfileCreateMessageBody");
             messageBody.JobProfileId = messageId.ToString();
             messageBody.UrlName = canonicalName;
             messageBody.CanonicalName = canonicalName;
