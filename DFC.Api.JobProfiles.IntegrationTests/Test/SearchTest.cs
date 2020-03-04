@@ -13,7 +13,7 @@ using NUnit.Framework;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Test
 {
-    public class SearchTest : Hook
+    public class SearchTest : SetUpAndTearDownBase
     {
 
         internal static List<KeyValuePair<string, string>> queryParameters = new List<KeyValuePair<string, string>>();

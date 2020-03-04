@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Test
 {
-    public class SummaryTest : JobProfileCreateHook
+    public class SummaryTest : SetUpAndTearDown
     {
         [Test]
         public async Task ResponseCode200()
