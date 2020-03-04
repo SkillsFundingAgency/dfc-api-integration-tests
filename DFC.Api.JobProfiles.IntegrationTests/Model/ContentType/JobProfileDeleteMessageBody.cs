@@ -1,4 +1,4 @@
-﻿namespace DFC.Api.JobProfiles.IntegrationTests.Model
+﻿namespace DFC.Api.JobProfiles.IntegrationTests.Model.ContentType
 {
     public class JobProfileDeleteMessageBody
     {

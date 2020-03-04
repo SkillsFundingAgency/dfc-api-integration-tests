@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DFC.Api.JobProfiles.Common.APISupport;
 using DFC.Api.JobProfiles.IntegrationTests.Model;
+using DFC.Api.JobProfiles.IntegrationTests.Model.API;
 using DFC.Api.JobProfiles.IntegrationTests.Support;
 using NUnit.Framework;
 

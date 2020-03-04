@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DFC.Api.JobProfiles.IntegrationTests.Model
+namespace DFC.Api.JobProfiles.IntegrationTests.Model.API
 {
     public class JobProfileSearchAPIResponse
     {

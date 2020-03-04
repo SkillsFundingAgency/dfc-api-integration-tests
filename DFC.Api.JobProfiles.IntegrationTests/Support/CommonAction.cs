@@ -1,6 +1,7 @@
 ﻿using DFC.Api.JobProfiles.Common.APISupport;
 using DFC.Api.JobProfiles.Common.AzureServiceBusSupport;
 using DFC.Api.JobProfiles.IntegrationTests.Model;
+using DFC.Api.JobProfiles.IntegrationTests.Model.ContentType;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;

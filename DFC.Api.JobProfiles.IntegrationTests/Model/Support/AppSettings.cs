@@ -1,4 +1,4 @@
-﻿namespace DFC.App.JobProfileOverview.Tests.IntegrationTests.API.Model.Support
+﻿namespace DFC.Api.JobProfiles.IntegrationTests.Model.Support
 {
     public class AppSettings
     {
