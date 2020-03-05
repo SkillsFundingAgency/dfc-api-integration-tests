@@ -1,3 +1,4 @@
+using DFC.Api.JobProfiles.IntegrationTests.Model.Support;
 using DFC.Api.JobProfiles.IntegrationTests.Support;
 using DFC.Api.JobProfiles.IntegrationTests.Support.API;
 using DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory;
@@ -20,8 +21,10 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
                 Endpoint = this.appSettings.APIConfig.EndpointBaseUrl.ProfileSummary,
             };
 
-            var tempAppSettings = this.appSettings;
+            var tempAppSettings = new AppSettings();
+            tempAppSettings.APIConfig = new APIConfig();
             tempAppSettings.APIConfig.ApimSubscriptionKey = this.commonAction.RandomString(10);
+            tempAppSettings.APIConfig.Version = this.appSettings.APIConfig.Version;
             this.authorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), this.appSettings, apiSettingsWithoutParameters);
             this.unauthorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), tempAppSettings, apiSettingsWithoutParameters);
         }

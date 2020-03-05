@@ -1,4 +1,5 @@
 using DFC.Api.JobProfiles.IntegrationTests.Model.API.JobProfileDetails;
+using DFC.Api.JobProfiles.IntegrationTests.Model.Support;
 using DFC.Api.JobProfiles.IntegrationTests.Support;
 using DFC.Api.JobProfiles.IntegrationTests.Support.API;
 using DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory;
@@ -22,8 +23,10 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
                 Endpoint = this.appSettings.APIConfig.EndpointBaseUrl.ProfileDetail,
             };
 
-            var tempAppSettings = this.appSettings;
+            var tempAppSettings = new AppSettings();
+            tempAppSettings.APIConfig = new APIConfig();
             tempAppSettings.APIConfig.ApimSubscriptionKey = this.commonAction.RandomString(10);
+            tempAppSettings.APIConfig.Version = this.appSettings.APIConfig.Version;
             this.authorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), this.appSettings, apiSettings);
             this.unauthorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), tempAppSettings, apiSettings);
         }
@@ -31,21 +34,21 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
         [Test]
         public async Task ResponseCode200()
         {
-            var apiResponse = await this.authorisedApi.GetById<JobProfileDetailsAPIResponse>(this.jobProfile.JobProfileId).ConfigureAwait(false);
+            var apiResponse = await this.authorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.jobProfile.CanonicalName).ConfigureAwait(false);
             Assert.AreEqual(HttpStatusCode.OK, apiResponse.StatusCode);
         }
 
         [Test]
         public async Task ResponseCode204()
         {
-            var apiResponse = await this.authorisedApi.GetById<JobProfileDetailsAPIResponse>(Guid.NewGuid().ToString()).ConfigureAwait(false);
+            var apiResponse = await this.authorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.commonAction.RandomString(10)).ConfigureAwait(false);
             Assert.AreEqual(HttpStatusCode.NoContent, apiResponse.StatusCode);
         }
 
         [Test]
         public async Task ResponseCode401()
         {
-            var apiResponse = await this.unauthorisedApi.GetById<JobProfileDetailsAPIResponse>(this.jobProfile.JobProfileId).ConfigureAwait(false);
+            var apiResponse = await this.unauthorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.jobProfile.CanonicalName).ConfigureAwait(false);
             Assert.AreEqual(HttpStatusCode.Unauthorized, apiResponse.StatusCode);
         }
     }
