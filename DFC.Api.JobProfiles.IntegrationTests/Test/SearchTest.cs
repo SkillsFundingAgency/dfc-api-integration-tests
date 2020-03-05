@@ -1,61 +1,75 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using DFC.Api.JobProfiles.Common.APISupport;
-using DFC.Api.JobProfiles.IntegrationTests.Model;
+﻿using DFC.Api.JobProfiles.IntegrationTests.Model.API.JobProfileSearch;
+using DFC.Api.JobProfiles.IntegrationTests.Model.Support;
 using DFC.Api.JobProfiles.IntegrationTests.Support;
+using DFC.Api.JobProfiles.IntegrationTests.Support.API;
+using DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Test
 {
-    public class SearchTest : Hook
+    public class SearchTest : SetUpAndTearDownBase
     {
 
-        internal static List<KeyValuePair<string, string>> queryParameters = new List<KeyValuePair<string, string>>();
+        private JobProfileAPI authorisedApi;
+        private JobProfileAPI unauthorisedApi;
+        private JobProfileAPI authorisedApiWithQueryParameters;
 
-        [Test]
-        public async Task SearchApiResponseCode200()
+        [SetUp]
+        public void SetUp()
         {
-            Response<JobProfileSearchAPIResponse> authorisedResponse = await CommonAction.ExecuteGetRequest<JobProfileSearchAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileSearch + "nurse");
-            Assert.AreEqual(HttpStatusCode.OK, authorisedResponse.HttpStatusCode, "Search API did not respond with a 200");
+            APISettings apiSettingsWithParameters = new APISettings
+            {
+                Endpoint = this.appSettings.APIConfig.EndpointBaseUrl.ProfileSearch,
+                QueryParameters = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("page", "2"),
+                    new KeyValuePair<string, string>("pageSize", "15"),
+                },
+            };
+
+            APISettings apiSettingsWithoutParameters = new APISettings
+            {
+                Endpoint = this.appSettings.APIConfig.EndpointBaseUrl.ProfileSearch,
+            };
+
+            var tempAppSettings = new AppSettings();
+            tempAppSettings.APIConfig = new APIConfig();
+            tempAppSettings.APIConfig.ApimSubscriptionKey = this.commonAction.RandomString(10);
+            tempAppSettings.APIConfig.Version = this.appSettings.APIConfig.Version;
+            this.authorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), this.appSettings, apiSettingsWithoutParameters);
+            this.authorisedApiWithQueryParameters = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), this.appSettings, apiSettingsWithParameters);
+            this.unauthorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), tempAppSettings, apiSettingsWithoutParameters);
         }
 
         [Test]
-        public async Task SearchApiRetrievesAdditionalPages()
+        public async Task SuccessfulJobProfileSearchRequest()
         {
-            SetQueryParameter("page", "2");
-            SetQueryParameter("pageSize", "15");
-            Response<JobProfileSearchAPIResponse> authorisedResponse = await CommonAction.ExecuteGetRequest<JobProfileSearchAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileSearch + "nurse", queryParameters);
-            Assert.AreEqual(authorisedResponse.Data.CurrentPage, Convert.ToInt32(GetQueryParamaterValue("page")), "Expected current page to be 2");
+            var response = await this.authorisedApi.GetByName<JobProfileSearchAPIResponse>("nurse").ConfigureAwait(false);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, "Job profile search: Unable to search job profiles.");
         }
 
         [Test]
-        public async Task SearchApiResponseCode204()
+        public async Task JobProfileSearchRequestWithPageQueryParameter()
         {
-            Response<JobProfileSearchAPIResponse> authorisedResponse = await CommonAction.ExecuteGetRequest<JobProfileSearchAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileSearch + "noprofile");
-            Assert.AreEqual(HttpStatusCode.NoContent, authorisedResponse.HttpStatusCode, "Search API did not respond with a 204");
+            var response = await this.authorisedApiWithQueryParameters.GetByName<JobProfileSearchAPIResponse>("nurse").ConfigureAwait(false);
+            Assert.AreEqual(response.Data.CurrentPage, 2, "Job profile search: The service returned an unexpected page parameter.");
         }
 
         [Test]
-        public async Task SearchApiResponseCode401()
+        public async Task NoContentJobProfileSearchRequest()
         {
-            Response<JobProfileSearchAPIResponse> unauthorisedResponse = await CommonAction.ExecuteGetRequest<JobProfileSearchAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileSearch + "plumber", false);
-            Assert.AreEqual(HttpStatusCode.Unauthorized, unauthorisedResponse.HttpStatusCode);
+            var response = await this.authorisedApi.GetByName<JobProfileSearchAPIResponse>("noprofile").ConfigureAwait(false);
+            Assert.AreEqual(HttpStatusCode.NoContent, response.StatusCode, "Job profile search: The service should report that the job profile is not present.");
         }
 
-        public static List<KeyValuePair<string, string>> SetQueryParameter(string parameterName, string parameterValue)
+        [Test]
+        public async Task UnauthorisedJobProfileSearchRequest()
         {
-            queryParameters.Add(new KeyValuePair<string, string>(parameterName, parameterValue));
-
-            return queryParameters;
-        }
-
-        public static string GetQueryParamaterValue(string queryParameter)
-        {
-            return queryParameters.Where(x => x.Key.Equals(queryParameter)).FirstOrDefault().Value.ToString();
+            var response = await this.unauthorisedApi.GetByName<JobProfileSearchAPIResponse>("nurse").ConfigureAwait(false);
+            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode, "Job profile search: The service should report that the request is unauthorised.");
         }
     }
 }
