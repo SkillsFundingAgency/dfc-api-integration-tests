@@ -5,14 +5,9 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory
 {
     internal class RestRequestFactory : IRestRequestFactory
     {
-        public IRestRequest Create(string urlSuffix)
+        public IRestRequest Create(string urlSuffix = null)
         {
             return new RestRequest(urlSuffix);
-        }
-
-        public IRestRequest Create()
-        {
-            return new RestRequest();
         }
     }
 }

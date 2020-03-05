@@ -5,7 +5,6 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory.Interface
 {
     public interface IRestRequestFactory
     {
-        IRestRequest Create(string urlSuffix);
-        IRestRequest Create();
+        IRestRequest Create(string urlSuffix = null);
     }
 }
