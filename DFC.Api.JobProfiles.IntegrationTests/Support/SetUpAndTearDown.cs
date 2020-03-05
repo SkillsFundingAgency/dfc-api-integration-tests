@@ -1,6 +1,4 @@
 ﻿using DFC.Api.JobProfiles.IntegrationTests.Model.ContentType.JobProfile;
-using DFC.Api.JobProfiles.IntegrationTests.Support.API;
-using DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory;
 using DFC.Api.JobProfiles.IntegrationTests.Support.AzureServiceBus;
 using DFC.Api.JobProfiles.IntegrationTests.Support.AzureServiceBus.ServiceBusFactory;
 using NUnit.Framework;
@@ -11,13 +9,11 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
     public class SetUpAndTearDown : SetUpAndTearDownBase
     {
         protected JobProfileContentType jobProfile;
-        protected JobProfileOverviewAPI api;
         protected ServiceBusSupport serviceBus;
 
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
-            this.api = new JobProfileOverviewAPI(new RestClientFactory(), new RestRequestFactory(), this.appSettings);
             this.serviceBus = new ServiceBusSupport(new TopicClientFactory(), this.appSettings);
             this.jobProfile = this.commonAction.GetResource<JobProfileContentType>("JobProfileContentType");
             var jobProfileMessageBody = this.commonAction.ConvertObjectToByteArray(this.jobProfile);

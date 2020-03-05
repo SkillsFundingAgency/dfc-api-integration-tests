@@ -9,5 +9,10 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory
         {
             return new RestRequest(urlSuffix);
         }
+
+        public IRestRequest Create()
+        {
+            return new RestRequest();
+        }
     }
 }

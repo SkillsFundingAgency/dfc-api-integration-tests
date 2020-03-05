@@ -8,6 +8,6 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Model.Support
 
         public string ApimSubscriptionKey { get; set; }
 
-        public Uri EndpointBaseUrl { get; set; }
+        public EndpointBaseUrl EndpointBaseUrl { get; set; }
     }
 }

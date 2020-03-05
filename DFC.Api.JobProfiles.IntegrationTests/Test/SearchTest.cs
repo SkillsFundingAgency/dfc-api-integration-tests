@@ -1,63 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using DFC.Api.JobProfiles.Common.APISupport;
-using DFC.Api.JobProfiles.IntegrationTests.Model;
-using DFC.Api.JobProfiles.IntegrationTests.Model.API;
-using DFC.Api.JobProfiles.IntegrationTests.Model.API.JobProfileSearch;
+﻿using DFC.Api.JobProfiles.IntegrationTests.Model.API.JobProfileSearch;
 using DFC.Api.JobProfiles.IntegrationTests.Support;
+using DFC.Api.JobProfiles.IntegrationTests.Support.API;
+using DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Test
 {
     public class SearchTest : SetUpAndTearDownBase
     {
 
-        internal static List<KeyValuePair<string, string>> queryParameters = new List<KeyValuePair<string, string>>();
+        private JobProfileAPI authorisedApi;
+        private JobProfileAPI unauthorisedApi;
+        private JobProfileAPI authorisedApiWithQueryParameters;
+
+        [SetUp]
+        public void SetUp()
+        {
+            APISettings apiSettingsWithParameters = new APISettings
+            {
+                Endpoint = this.appSettings.APIConfig.EndpointBaseUrl.ProfileSearch,
+                QueryParameters = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("page", "2"),
+                    new KeyValuePair<string, string>("pageSize", "15"),
+                },
+            };
+
+            APISettings apiSettingsWithoutParameters = new APISettings
+            {
+                Endpoint = this.appSettings.APIConfig.EndpointBaseUrl.ProfileSearch,
+            };
+
+            var tempAppSettings = this.appSettings;
+            tempAppSettings.APIConfig.ApimSubscriptionKey = this.commonAction.RandomString(10);
+            this.authorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), this.appSettings, apiSettingsWithoutParameters);
+            this.authorisedApiWithQueryParameters = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), this.appSettings, apiSettingsWithParameters);
+            this.unauthorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), tempAppSettings, apiSettingsWithoutParameters);
+        }
 
         [Test]
         public async Task SearchApiResponseCode200()
         {
-            Response<JobProfileSearchAPIResponse> authorisedResponse = await CommonAction.ExecuteGetRequest<JobProfileSearchAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileSearch + "nurse");
-            Assert.AreEqual(HttpStatusCode.OK, authorisedResponse.HttpStatusCode, "Search API did not respond with a 200");
+            var response = await this.authorisedApi.GetByName<JobProfileSearchAPIResponse>("nurse").ConfigureAwait(false);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, "Search API did not respond with a 200");
         }
 
         [Test]
         public async Task SearchApiRetrievesAdditionalPages()
         {
-            SetQueryParameter("page", "2");
-            SetQueryParameter("pageSize", "15");
-            Response<JobProfileSearchAPIResponse> authorisedResponse = await CommonAction.ExecuteGetRequest<JobProfileSearchAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileSearch + "nurse", queryParameters);
-            Assert.AreEqual(authorisedResponse.Data.CurrentPage, Convert.ToInt32(GetQueryParamaterValue("page")), "Expected current page to be 2");
+            var response = await this.authorisedApiWithQueryParameters.GetByName<JobProfileSearchAPIResponse>("nurse").ConfigureAwait(false);
+            Assert.AreEqual(response.Data.CurrentPage, 2, "Expected current page to be 2");
         }
 
         [Test]
         public async Task SearchApiResponseCode204()
         {
-            Response<JobProfileSearchAPIResponse> authorisedResponse = await CommonAction.ExecuteGetRequest<JobProfileSearchAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileSearch + "noprofile");
-            Assert.AreEqual(HttpStatusCode.NoContent, authorisedResponse.HttpStatusCode, "Search API did not respond with a 204");
+            var response = await this.authorisedApi.GetByName<JobProfileSearchAPIResponse>("noprofile").ConfigureAwait(false);
+            Assert.AreEqual(HttpStatusCode.NoContent, response.StatusCode, "Search API did not respond with a 204");
         }
 
         [Test]
         public async Task SearchApiResponseCode401()
         {
-            Response<JobProfileSearchAPIResponse> unauthorisedResponse = await CommonAction.ExecuteGetRequest<JobProfileSearchAPIResponse>(Settings.APIConfig.EndpointBaseUrl.ProfileSearch + "plumber", false);
-            Assert.AreEqual(HttpStatusCode.Unauthorized, unauthorisedResponse.HttpStatusCode);
-        }
-
-        public static List<KeyValuePair<string, string>> SetQueryParameter(string parameterName, string parameterValue)
-        {
-            queryParameters.Add(new KeyValuePair<string, string>(parameterName, parameterValue));
-
-            return queryParameters;
-        }
-
-        public static string GetQueryParamaterValue(string queryParameter)
-        {
-            return queryParameters.Where(x => x.Key.Equals(queryParameter)).FirstOrDefault().Value.ToString();
+            var response = await this.unauthorisedApi.GetByName<JobProfileSearchAPIResponse>("nurse").ConfigureAwait(false);
+            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         }
     }
 }
