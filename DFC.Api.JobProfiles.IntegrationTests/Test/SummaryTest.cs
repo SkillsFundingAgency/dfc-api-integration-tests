@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Test
 {
-    public class SummaryTest : SetUpAndTearDown
+    public class SummaryTest : SetUpAndTearDownBase
     {
         private JobProfileAPI authorisedApi;
         private JobProfileAPI unauthorisedApi;
@@ -30,17 +30,17 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
         }
 
         [Test]
-        public async Task ResponseCode200()
+        public async Task SuccessfulJobProfileSummaryRequest()
         {
             var response = await this.authorisedApi.GetSummaries().ConfigureAwait(false);
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, "Job profile summary: Unable to search job profile summaries.");
         }
 
         [Test]
-        public async Task ResponseCode401()
+        public async Task UnauthorisedProfileSummaryRequest()
         {
             var response = await this.unauthorisedApi.GetSummaries().ConfigureAwait(false);
-            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode, "Job profile summary: The service should report that the request is unauthorised.");
         }
     }
 }

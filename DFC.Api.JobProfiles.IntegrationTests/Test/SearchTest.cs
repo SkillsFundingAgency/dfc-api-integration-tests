@@ -45,31 +45,31 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
         }
 
         [Test]
-        public async Task SearchApiResponseCode200()
+        public async Task SuccessfulJobProfileSearchRequest()
         {
             var response = await this.authorisedApi.GetByName<JobProfileSearchAPIResponse>("nurse").ConfigureAwait(false);
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, "Search API did not respond with a 200");
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, "Job profile search: Unable to search job profiles.");
         }
 
         [Test]
-        public async Task SearchApiRetrievesAdditionalPages()
+        public async Task JobProfileSearchRequestWithPageQueryParameter()
         {
             var response = await this.authorisedApiWithQueryParameters.GetByName<JobProfileSearchAPIResponse>("nurse").ConfigureAwait(false);
-            Assert.AreEqual(response.Data.CurrentPage, 2, "Expected current page to be 2");
+            Assert.AreEqual(response.Data.CurrentPage, 2, "Job profile search: The service returned an unexpected page parameter.");
         }
 
         [Test]
-        public async Task SearchApiResponseCode204()
+        public async Task NoContentJobProfileSearchRequest()
         {
             var response = await this.authorisedApi.GetByName<JobProfileSearchAPIResponse>("noprofile").ConfigureAwait(false);
-            Assert.AreEqual(HttpStatusCode.NoContent, response.StatusCode, "Search API did not respond with a 204");
+            Assert.AreEqual(HttpStatusCode.NoContent, response.StatusCode, "Job profile search: The service should report that the job profile is not present.");
         }
 
         [Test]
-        public async Task SearchApiResponseCode401()
+        public async Task UnauthorisedJobProfileSearchRequest()
         {
             var response = await this.unauthorisedApi.GetByName<JobProfileSearchAPIResponse>("nurse").ConfigureAwait(false);
-            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode, "Job profile search: The service should report that the request is unauthorised.");
         }
     }
 }

@@ -22,7 +22,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support.API
             this.apiSettings = apiSettings;
         }
 
-        public async Task<IRestResponse<T>> GetById<T>(string id)
+        public async Task<IRestResponse<T>> GetById<T>(string id) where T : class, new()
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -43,7 +43,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support.API
             return await Task.Run(() => restClient.Execute<T>(restRequest)).ConfigureAwait(false);
         }
 
-        public async Task<IRestResponse<T>> GetByName<T>(string name)
+        public async Task<IRestResponse<T>> GetByName<T>(string name) where T : class, new()
         {
             return await this.GetById<T>(name).ConfigureAwait(false);
         }
