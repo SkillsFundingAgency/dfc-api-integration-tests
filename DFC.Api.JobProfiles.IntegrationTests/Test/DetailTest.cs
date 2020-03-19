@@ -1,3 +1,4 @@
+using DFC.Api.JobProfiles.IntegrationTests.Model;
 using DFC.Api.JobProfiles.IntegrationTests.Model.API.JobProfileDetails;
 using DFC.Api.JobProfiles.IntegrationTests.Model.Support;
 using DFC.Api.JobProfiles.IntegrationTests.Support;
@@ -35,6 +36,9 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
         {
             var apiResponse = await this.authorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.jobProfile.CanonicalName).ConfigureAwait(false);
             Assert.AreEqual(HttpStatusCode.OK, apiResponse.StatusCode, "Job details: Unable to retrieve the job details for a job profile.");
+            var commonApi = this.mapper.Map<CommonProperties>(apiResponse.Data);
+            var commonJobProfile = this.mapper.Map<CommonProperties>(this.jobProfile);
+            Assert.AreEqual(commonApi, commonJobProfile);
         }
 
         [Test]
