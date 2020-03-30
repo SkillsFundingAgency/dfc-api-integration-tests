@@ -1,10 +1,11 @@
-using DFC.Api.JobProfiles.IntegrationTests.Model;
 using DFC.Api.JobProfiles.IntegrationTests.Model.API.JobProfileDetails;
 using DFC.Api.JobProfiles.IntegrationTests.Model.Support;
 using DFC.Api.JobProfiles.IntegrationTests.Support;
 using DFC.Api.JobProfiles.IntegrationTests.Support.API;
 using DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory;
 using NUnit.Framework;
+using System;
+using System.Globalization;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -36,9 +37,19 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
         {
             var apiResponse = await this.authorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.jobProfile.CanonicalName).ConfigureAwait(false);
             Assert.AreEqual(HttpStatusCode.OK, apiResponse.StatusCode, "Job details: Unable to retrieve the job details for a job profile.");
-            var commonApi = this.mapper.Map<CommonProperties>(apiResponse.Data);
-            var commonJobProfile = this.mapper.Map<CommonProperties>(this.jobProfile);
-            Assert.AreEqual(commonApi, commonJobProfile);
+            Assert.AreEqual(apiResponse.Data.Title, this.jobProfile.Title);
+            Assert.AreEqual(apiResponse.Data.LastUpdatedDate, this.jobProfile.LastModified);
+            Assert.AreEqual(apiResponse.Data.Soc, this.jobProfile.SocCodeData.SOCCode.Substring(0, 4));
+            Assert.AreEqual(apiResponse.Data.ONetOccupationalCode, this.jobProfile.SocCodeData.ONetOccupationalCode);
+            Assert.AreEqual(apiResponse.Data.AlternativeTitle, this.jobProfile.AlternativeTitle);
+            Assert.AreEqual(apiResponse.Data.Overview, this.jobProfile.Overview);
+            Assert.AreEqual(apiResponse.Data.SalaryStarter, ((int)this.jobProfile.SalaryStarter).ToString(CultureInfo.CurrentCulture));
+            Assert.AreEqual(apiResponse.Data.SalaryExperienced, ((int)this.jobProfile.SalaryExperienced).ToString(CultureInfo.CurrentCulture));
+            Assert.AreEqual(apiResponse.Data.MinimumHours, this.jobProfile.MinimumHours);
+            Assert.AreEqual(apiResponse.Data.MaximumHours, this.jobProfile.MaximumHours);
+            Assert.AreEqual(apiResponse.Data.WorkingHoursDetails, this.jobProfile.WorkingHoursDetails[0].Title);
+            Assert.AreEqual(apiResponse.Data.WorkingPattern, this.jobProfile.WorkingPattern[0].Title);
+            Assert.AreEqual(apiResponse.Data.WorkingPatternDetails, this.jobProfile.WorkingPatternDetails[0].Title);
         }
 
         [Test]
