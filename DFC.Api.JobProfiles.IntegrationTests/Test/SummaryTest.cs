@@ -10,23 +10,23 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
 {
     public class SummaryTest : SetUpAndTearDownBase
     {
-        private JobProfileAPI authorisedApi;
-        private JobProfileAPI unauthorisedApi;
+        private JobProfileApi authorisedApi;
+        private JobProfileApi unauthorisedApi;
 
         [SetUp]
         public void SetUp()
         {
-            APISettings apiSettingsWithoutParameters = new APISettings
+            var apiSettingsWithoutParameters = new APISettings { Endpoint = this.AppSettings.APIConfig.EndpointBaseUrl.ProfileSummary };
+            var tempAppSettings = new AppSettings
             {
-                Endpoint = this.appSettings.APIConfig.EndpointBaseUrl.ProfileSummary,
+                APIConfig = new APIConfig
+                {
+                    ApimSubscriptionKey = this.CommonAction.RandomString(10),
+                    Version = this.AppSettings.APIConfig.Version,
+                },
             };
-
-            var tempAppSettings = new AppSettings();
-            tempAppSettings.APIConfig = new APIConfig();
-            tempAppSettings.APIConfig.ApimSubscriptionKey = this.commonAction.RandomString(10);
-            tempAppSettings.APIConfig.Version = this.appSettings.APIConfig.Version;
-            this.authorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), this.appSettings, apiSettingsWithoutParameters);
-            this.unauthorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), tempAppSettings, apiSettingsWithoutParameters);
+            this.authorisedApi = new JobProfileApi(new RestClientFactory(), new RestRequestFactory(), this.AppSettings, apiSettingsWithoutParameters);
+            this.unauthorisedApi = new JobProfileApi(new RestClientFactory(), new RestRequestFactory(), tempAppSettings, apiSettingsWithoutParameters);
         }
 
         [Test]

@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-
-namespace DFC.App.JobProfileOverview.Tests.IntegrationTests.API.Support.Interface
+﻿namespace DFC.Api.JobProfiles.IntegrationTests.Support.CommonAction.Interface
 {
     internal interface IGeneralSupport
     {
