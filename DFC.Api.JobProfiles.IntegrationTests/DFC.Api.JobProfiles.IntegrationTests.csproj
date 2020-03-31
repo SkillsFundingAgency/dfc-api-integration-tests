@@ -4,7 +4,13 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <ProjectGuid>4348EFBE-EC2E-443E-A08D-8A51AC5D1AE4</ProjectGuid>
     <IsPackable>false</IsPackable>
+    <CodeAnalysisRuleSet>../UnitTests.CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\stylecop.json" Link="../stylecop.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="4.1.2" />

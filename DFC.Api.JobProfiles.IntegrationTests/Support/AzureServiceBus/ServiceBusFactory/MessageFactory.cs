@@ -1,4 +1,4 @@
-﻿using DFC.Api.JobProfiles.IntegrationTests.Support.AzureServiceBus.ServiceBusFactory.Interface;
+﻿using DFC.Api.JobProfiles.IntegrationTests.Support.AzureServiceBus.ServiceBusFactory.Interfaces;
 using Microsoft.Azure.ServiceBus;
 using System;
 
@@ -6,12 +6,12 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support.AzureServiceBus.ServiceBu
 {
     public class MessageFactory : IMessageFactory
     {
-        public Message Create(string messageId, byte[] body, string actionType, string contentType)
+        public Message Create(string messageId, byte[] messageBody, string actionType, string contentType)
         {
-            Message message = new Message()
+            var message = new Message
             {
                 ContentType = contentType,
-                Body = body,
+                Body = messageBody,
                 CorrelationId = Guid.NewGuid().ToString(),
                 Label = "Automated message",
                 MessageId = messageId,

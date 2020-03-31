@@ -12,36 +12,36 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
 {
     public class SearchTest : SetUpAndTearDownBase
     {
-
-        private JobProfileAPI authorisedApi;
-        private JobProfileAPI unauthorisedApi;
-        private JobProfileAPI authorisedApiWithQueryParameters;
+        private JobProfileApi authorisedApi;
+        private JobProfileApi unauthorisedApi;
+        private JobProfileApi authorisedApiWithQueryParameters;
 
         [SetUp]
         public void SetUp()
         {
-            APISettings apiSettingsWithParameters = new APISettings
+            var apiSettingsWithParameters = new APISettings
             {
-                Endpoint = this.appSettings.APIConfig.EndpointBaseUrl.ProfileSearch,
-                QueryParameters = new List<KeyValuePair<string, string>>()
+                Endpoint = this.AppSettings.APIConfig.EndpointBaseUrl.ProfileSearch,
+                QueryParameters = new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("page", "2"),
                     new KeyValuePair<string, string>("pageSize", "15"),
                 },
             };
 
-            APISettings apiSettingsWithoutParameters = new APISettings
-            {
-                Endpoint = this.appSettings.APIConfig.EndpointBaseUrl.ProfileSearch,
-            };
+            var apiSettingsWithoutParameters = new APISettings { Endpoint = this.AppSettings.APIConfig.EndpointBaseUrl.ProfileSearch };
 
-            var tempAppSettings = new AppSettings();
-            tempAppSettings.APIConfig = new APIConfig();
-            tempAppSettings.APIConfig.ApimSubscriptionKey = this.commonAction.RandomString(10);
-            tempAppSettings.APIConfig.Version = this.appSettings.APIConfig.Version;
-            this.authorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), this.appSettings, apiSettingsWithoutParameters);
-            this.authorisedApiWithQueryParameters = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), this.appSettings, apiSettingsWithParameters);
-            this.unauthorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), tempAppSettings, apiSettingsWithoutParameters);
+            var tempAppSettings = new AppSettings
+            {
+                APIConfig = new APIConfig
+                {
+                    ApimSubscriptionKey = this.CommonAction.RandomString(10),
+                    Version = this.AppSettings.APIConfig.Version,
+                },
+            };
+            this.authorisedApi = new JobProfileApi(new RestClientFactory(), new RestRequestFactory(), this.AppSettings, apiSettingsWithoutParameters);
+            this.authorisedApiWithQueryParameters = new JobProfileApi(new RestClientFactory(), new RestRequestFactory(), this.AppSettings, apiSettingsWithParameters);
+            this.unauthorisedApi = new JobProfileApi(new RestClientFactory(), new RestRequestFactory(), tempAppSettings, apiSettingsWithoutParameters);
         }
 
         [Test]
@@ -54,8 +54,9 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
         [Test]
         public async Task JobProfileSearchRequestWithPageQueryParameter()
         {
+            const int expectedPageNumber = 2;
             var response = await this.authorisedApiWithQueryParameters.GetByName<JobProfileSearchAPIResponse>("nurse").ConfigureAwait(false);
-            Assert.AreEqual(response.Data.CurrentPage, 2, "Job profile search: The service returned an unexpected page parameter.");
+            Assert.AreEqual(expectedPageNumber, response.Data.CurrentPage, "Job profile search: The service returned an unexpected page parameter.");
         }
 
         [Test]

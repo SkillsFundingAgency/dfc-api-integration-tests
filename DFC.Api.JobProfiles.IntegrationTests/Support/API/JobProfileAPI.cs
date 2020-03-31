@@ -1,20 +1,20 @@
 ﻿using DFC.Api.JobProfiles.IntegrationTests.Model.API.JobProfileSummary;
 using DFC.Api.JobProfiles.IntegrationTests.Model.Support;
-using DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory.Interface;
+using DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory.Interfaces;
 using RestSharp;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Support.API
 {
-    public class JobProfileAPI : IJobProfileAPI
+    public class JobProfileApi : IJobProfileApi
     {
-        private IRestClientFactory restClientFactory;
-        private IRestRequestFactory restRequestFactory;
-        private AppSettings appSettings;
-        private APISettings apiSettings;
+        private readonly IRestClientFactory restClientFactory;
+        private readonly IRestRequestFactory restRequestFactory;
+        private readonly AppSettings appSettings;
+        private readonly APISettings apiSettings;
 
-        public JobProfileAPI(IRestClientFactory restClientFactory, IRestRequestFactory restRequestFactory, AppSettings appSettings, APISettings apiSettings)
+        public JobProfileApi(IRestClientFactory restClientFactory, IRestRequestFactory restRequestFactory, AppSettings appSettings, APISettings apiSettings)
         {
             this.restClientFactory = restClientFactory;
             this.restRequestFactory = restRequestFactory;
@@ -22,7 +22,8 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support.API
             this.apiSettings = apiSettings;
         }
 
-        public async Task<IRestResponse<T>> GetById<T>(string id) where T : class, new()
+        public async Task<IRestResponse<T>> GetById<T>(string id)
+            where T : class, new()
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -43,7 +44,8 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support.API
             return await Task.Run(() => restClient.Execute<T>(restRequest)).ConfigureAwait(false);
         }
 
-        public async Task<IRestResponse<T>> GetByName<T>(string name) where T : class, new()
+        public async Task<IRestResponse<T>> GetByName<T>(string name)
+            where T : class, new()
         {
             return await this.GetById<T>(name).ConfigureAwait(false);
         }

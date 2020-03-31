@@ -11,44 +11,44 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
 {
     public class DetailTest : SetUpAndTearDown
     {
-        private JobProfileAPI authorisedApi;
-        private JobProfileAPI unauthorisedApi;
+        private JobProfileApi authorisedApi;
+        private JobProfileApi unauthorisedApi;
 
         [SetUp]
         public void SetUp()
         {
-            APISettings apiSettings = new APISettings
+            var apiSettings = new APISettings { Endpoint = this.AppSettings.APIConfig.EndpointBaseUrl.ProfileDetail };
+            var tempAppSettings = new AppSettings
             {
-                Endpoint = this.appSettings.APIConfig.EndpointBaseUrl.ProfileDetail,
+                APIConfig = new APIConfig
+                {
+                    ApimSubscriptionKey = this.CommonAction.RandomString(10),
+                    Version = this.AppSettings.APIConfig.Version,
+                },
             };
-
-            var tempAppSettings = new AppSettings();
-            tempAppSettings.APIConfig = new APIConfig();
-            tempAppSettings.APIConfig.ApimSubscriptionKey = this.commonAction.RandomString(10);
-            tempAppSettings.APIConfig.Version = this.appSettings.APIConfig.Version;
-            this.authorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), this.appSettings, apiSettings);
-            this.unauthorisedApi = new JobProfileAPI(new RestClientFactory(), new RestRequestFactory(), tempAppSettings, apiSettings);
+            this.authorisedApi = new JobProfileApi(new RestClientFactory(), new RestRequestFactory(), this.AppSettings, apiSettings);
+            this.unauthorisedApi = new JobProfileApi(new RestClientFactory(), new RestRequestFactory(), tempAppSettings, apiSettings);
         }
 
         [Test]
         public async Task SuccessfulJobDetailsRequest()
         {
-            var apiResponse = await this.authorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.jobProfile.CanonicalName).ConfigureAwait(false);
+            var apiResponse = await this.authorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.JobProfile.CanonicalName).ConfigureAwait(false);
             Assert.AreEqual(HttpStatusCode.OK, apiResponse.StatusCode, "Job details: Unable to retrieve the job details for a job profile.");
-            new CustomAssert(apiResponse, this.jobProfile).PropertiesMatch();
+            new CustomAssert(apiResponse, this.JobProfile).PropertiesMatch();
         }
 
         [Test]
         public async Task NoContentJobDetailsRequest()
         {
-            var apiResponse = await this.authorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.commonAction.RandomString(10)).ConfigureAwait(false);
+            var apiResponse = await this.authorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.CommonAction.RandomString(10)).ConfigureAwait(false);
             Assert.AreEqual(HttpStatusCode.NoContent, apiResponse.StatusCode, "Job details: The service should report that the job profile is not present.");
         }
 
         [Test]
         public async Task UnauthorisedJobDetailsRequest()
         {
-            var apiResponse = await this.unauthorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.jobProfile.CanonicalName).ConfigureAwait(false);
+            var apiResponse = await this.unauthorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.JobProfile.CanonicalName).ConfigureAwait(false);
             Assert.AreEqual(HttpStatusCode.Unauthorized, apiResponse.StatusCode, "Job details: The service should report that the request is unauthorised.");
         }
     }

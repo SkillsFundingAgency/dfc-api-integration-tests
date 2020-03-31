@@ -1,4 +1,4 @@
-﻿using DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory.Interface;
+﻿using DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory.Interfaces;
 using RestSharp;
 
 namespace DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory
