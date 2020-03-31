@@ -13,7 +13,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
         private JobProfileContentType jobProfile;
         private AppSettings appSettings;
 
-        public CustomAssert(IRestResponse<JobProfileDetailsAPIResponse> apiResponse, JobProfileContentType jobProfile)
+        public CustomAssert(IRestResponse<JobProfileDetailsAPIResponse> apiResponse, JobProfileContentType jobProfile, AppSettings appSettings)
         {
             this.apiResponse = apiResponse;
             this.jobProfile = jobProfile;
