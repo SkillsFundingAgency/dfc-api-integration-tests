@@ -1,6 +1,5 @@
 ﻿using DFC.Api.JobProfiles.IntegrationTests.Model.API.JobProfileDetails;
 using DFC.Api.JobProfiles.IntegrationTests.Model.ContentType.JobProfile;
-using DFC.Api.JobProfiles.IntegrationTests.Model.Support;
 using NUnit.Framework;
 using RestSharp;
 using System.Globalization;
@@ -11,13 +10,11 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
     {
         private IRestResponse<JobProfileDetailsAPIResponse> apiResponse;
         private JobProfileContentType jobProfile;
-        private AppSettings appSettings;
 
-        public CustomAssert(IRestResponse<JobProfileDetailsAPIResponse> apiResponse, JobProfileContentType jobProfile, AppSettings appSettings)
+        public CustomAssert(IRestResponse<JobProfileDetailsAPIResponse> apiResponse, JobProfileContentType jobProfile)
         {
             this.apiResponse = apiResponse;
             this.jobProfile = jobProfile;
-            this.appSettings = appSettings;
         }
 
         public void PropertiesMatch()
@@ -70,7 +67,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
             Assert.AreEqual(this.apiResponse.Data.WhatYouWillDo.WorkingEnvironment.Uniform, $"You may need to wear {this.jobProfile.WhatYouWillDoData.Uniforms[0].Description}.");
             Assert.AreEqual(this.apiResponse.Data.CareerPathAndProgression.CareerPathAndProgression[0], this.jobProfile.CareerPathAndProgression);
             Assert.AreEqual(this.apiResponse.Data.RelatedCareers[0].Title, this.jobProfile.RelatedCareersData[0].Title);
-            Assert.AreEqual(this.apiResponse.Data.RelatedCareers[0].Url, $"{this.appSettings.APIConfig.EndpointBaseUrl.ProfileDetail}{this.jobProfile.RelatedCareersData[0].ProfileLink}");
+            Assert.AreEqual(this.apiResponse.Data.RelatedCareers[0].Url, $"https://sit.api.nationalcareersservice.org.uk/job-profiles{this.jobProfile.RelatedCareersData[0].ProfileLink}");
         }
     }
 }
