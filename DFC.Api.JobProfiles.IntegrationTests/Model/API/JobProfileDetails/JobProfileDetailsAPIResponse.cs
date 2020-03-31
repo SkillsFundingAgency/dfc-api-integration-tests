@@ -7,7 +7,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Model.API.JobProfileDetails
     {
         public string Title { get; set; }
 
-        public DateTime LastUpdatedDate { get; set; }
+        public DateTime? LastUpdatedDate { get; set; }
 
         public string Url { get; set; }
 

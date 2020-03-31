@@ -35,6 +35,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
         {
             var apiResponse = await this.authorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.jobProfile.CanonicalName).ConfigureAwait(false);
             Assert.AreEqual(HttpStatusCode.OK, apiResponse.StatusCode, "Job details: Unable to retrieve the job details for a job profile.");
+            new CustomAssert(apiResponse, this.jobProfile).PropertiesMatch();
         }
 
         [Test]
