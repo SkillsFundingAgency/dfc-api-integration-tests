@@ -21,6 +21,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
             this.ServiceBus = new ServiceBusSupport(new TopicClientFactory(), this.AppSettings);
             this.WakeUpJobProfile = this.CommonAction.GetResource<JobProfileContentType>("JobProfileContentType");
             this.WakeUpJobProfile.JobProfileId = Guid.NewGuid().ToString();
+            this.WakeUpJobProfile.CanonicalName = this.CommonAction.RandomString(10).ToLowerInvariant();
             var jobProfileMessageBody = this.CommonAction.ConvertObjectToByteArray(this.WakeUpJobProfile);
             var message = new MessageFactory().Create(this.WakeUpJobProfile.JobProfileId, jobProfileMessageBody, "Published", "JobProfile");
             await this.ServiceBus.SendMessage(message).ConfigureAwait(false);
