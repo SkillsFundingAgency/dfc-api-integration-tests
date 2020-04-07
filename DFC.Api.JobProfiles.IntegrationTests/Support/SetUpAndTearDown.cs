@@ -39,11 +39,13 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
         public async Task OneTimeTearDown()
         {
             var wakeUpJobProfileDelete = this.CommonAction.GetResource<JobProfileContentType>("JobProfileDelete");
+            wakeUpJobProfileDelete.JobProfileId = this.WakeUpJobProfile.JobProfileId;
             var messageBody = this.CommonAction.ConvertObjectToByteArray(wakeUpJobProfileDelete);
             var message = new MessageFactory().Create(this.WakeUpJobProfile.JobProfileId, messageBody, "Deleted", "JobProfile");
             await this.ServiceBus.SendMessage(message).ConfigureAwait(false);
 
             var jobProfileDelete = this.CommonAction.GetResource<JobProfileContentType>("JobProfileDelete");
+            jobProfileDelete.JobProfileId = this.JobProfile.JobProfileId;
             messageBody = this.CommonAction.ConvertObjectToByteArray(jobProfileDelete);
             message = new MessageFactory().Create(this.JobProfile.JobProfileId, messageBody, "Deleted", "JobProfile");
             await this.ServiceBus.SendMessage(message).ConfigureAwait(false);
