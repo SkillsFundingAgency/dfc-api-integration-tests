@@ -22,7 +22,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
 
         public void PropertiesMatch()
         {
-            Assert.AreEqual(this.apiResponse.Data.Title, this.jobProfile.Title);
+            Assert.AreEqual(this.apiResponse.Data.Title, "Automatically generated record");
             Assert.AreEqual(this.apiResponse.Data.LastUpdatedDate, this.jobProfile.LastModified);
             Assert.AreEqual(this.apiResponse.Data.Soc, this.jobProfile.SocCodeData.SOCCode.Substring(0, 4));
             Assert.AreEqual(this.apiResponse.Data.ONetOccupationalCode, this.jobProfile.SocCodeData.ONetOccupationalCode);
