@@ -42,13 +42,10 @@
     <None Update="appsettings.template.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resource\JobProfileContentType.json">
+    <None Update="Resource\JobProfileTemplate.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resource\JobProfileCreateMessageBody.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resource\JobProfileDelete.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resource\JobProfileDeleteMessageBody.json">

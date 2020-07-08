@@ -19,14 +19,14 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
         public async Task OneTimeSetUp()
         {
             this.ServiceBus = new ServiceBusSupport(new TopicClientFactory(), this.AppSettings);
-            this.WakeUpJobProfile = this.CommonAction.GetResource<JobProfileContentType>("JobProfileContentType");
+            this.WakeUpJobProfile = this.CommonAction.GetResource<JobProfileContentType>("JobProfileTemplate");
             this.WakeUpJobProfile.JobProfileId = Guid.NewGuid().ToString();
             this.WakeUpJobProfile.CanonicalName = this.CommonAction.RandomString(10).ToLowerInvariant();
             var jobProfileMessageBody = this.CommonAction.ConvertObjectToByteArray(this.WakeUpJobProfile);
             var message = new MessageFactory().Create(this.WakeUpJobProfile.JobProfileId, jobProfileMessageBody, "Published", "JobProfile");
             await this.ServiceBus.SendMessage(message).ConfigureAwait(false);
             await Task.Delay(TimeSpan.FromMinutes(this.AppSettings.DeploymentWaitInMinutes)).ConfigureAwait(true);
-            this.JobProfile = this.CommonAction.GetResource<JobProfileContentType>("JobProfileContentType");
+            this.JobProfile = this.CommonAction.GetResource<JobProfileContentType>("JobProfileTemplate");
             this.JobProfile.JobProfileId = Guid.NewGuid().ToString();
             this.JobProfile.CanonicalName = this.CommonAction.RandomString(10).ToLowerInvariant();
             jobProfileMessageBody = this.CommonAction.ConvertObjectToByteArray(this.JobProfile);
@@ -38,12 +38,14 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
         [OneTimeTearDown]
         public async Task OneTimeTearDown()
         {
-            var wakeUpJobProfileDelete = this.CommonAction.GetResource<JobProfileContentType>("JobProfileDelete");
+            var wakeUpJobProfileDelete = this.CommonAction.GetResource<JobProfileContentType>("JobProfileTemplate");
+            wakeUpJobProfileDelete.JobProfileId = this.WakeUpJobProfile.JobProfileId;
             var messageBody = this.CommonAction.ConvertObjectToByteArray(wakeUpJobProfileDelete);
             var message = new MessageFactory().Create(this.WakeUpJobProfile.JobProfileId, messageBody, "Deleted", "JobProfile");
             await this.ServiceBus.SendMessage(message).ConfigureAwait(false);
 
-            var jobProfileDelete = this.CommonAction.GetResource<JobProfileContentType>("JobProfileDelete");
+            var jobProfileDelete = this.CommonAction.GetResource<JobProfileContentType>("JobProfileTemplate");
+            jobProfileDelete.JobProfileId = this.JobProfile.JobProfileId;
             messageBody = this.CommonAction.ConvertObjectToByteArray(jobProfileDelete);
             message = new MessageFactory().Create(this.JobProfile.JobProfileId, messageBody, "Deleted", "JobProfile");
             await this.ServiceBus.SendMessage(message).ConfigureAwait(false);
