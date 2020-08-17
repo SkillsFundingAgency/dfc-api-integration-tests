@@ -2,6 +2,7 @@
 using DFC.Api.JobProfiles.IntegrationTests.Support.AzureServiceBus;
 using DFC.Api.JobProfiles.IntegrationTests.Support.AzureServiceBus.ServiceBusFactory;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using System;
 using System.Threading.Tasks;
 
@@ -9,6 +10,8 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
 {
     public class SetUpAndTearDown : SetUpAndTearDownBase
     {
+        protected string ExpectedAPIResponse { get; set; }
+
         protected JobProfileContentType WakeUpJobProfile { get; set; }
 
         protected JobProfileContentType JobProfile { get; set; }
@@ -18,21 +21,27 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
+            var wakeUpJobProfileId = Guid.NewGuid().ToString();
+            var testJobProfileId = Guid.NewGuid().ToString();
+            NLog.LogManager.GetCurrentClassLogger().Info($"Wake up job profile ID: {wakeUpJobProfileId}");
+            NLog.LogManager.GetCurrentClassLogger().Info($"Test job profile ID: {testJobProfileId}");
             this.ServiceBus = new ServiceBusSupport(new TopicClientFactory(), this.AppSettings);
             this.WakeUpJobProfile = this.CommonAction.GetResource<JobProfileContentType>("JobProfileTemplate");
-            this.WakeUpJobProfile.JobProfileId = Guid.NewGuid().ToString();
+            this.WakeUpJobProfile.JobProfileId = wakeUpJobProfileId;
             this.WakeUpJobProfile.CanonicalName = this.CommonAction.RandomString(10).ToLowerInvariant();
             var jobProfileMessageBody = this.CommonAction.ConvertObjectToByteArray(this.WakeUpJobProfile);
             var message = new MessageFactory().Create(this.WakeUpJobProfile.JobProfileId, jobProfileMessageBody, "Published", "JobProfile");
             await this.ServiceBus.SendMessage(message).ConfigureAwait(false);
             await Task.Delay(TimeSpan.FromMinutes(this.AppSettings.DeploymentWaitInMinutes)).ConfigureAwait(true);
             this.JobProfile = this.CommonAction.GetResource<JobProfileContentType>("JobProfileTemplate");
-            this.JobProfile.JobProfileId = Guid.NewGuid().ToString();
+            this.JobProfile.JobProfileId = testJobProfileId;
             this.JobProfile.CanonicalName = this.CommonAction.RandomString(10).ToLowerInvariant();
             jobProfileMessageBody = this.CommonAction.ConvertObjectToByteArray(this.JobProfile);
             message = new MessageFactory().Create(this.JobProfile.JobProfileId, jobProfileMessageBody, "Published", "JobProfile");
             await this.ServiceBus.SendMessage(message).ConfigureAwait(false);
             await Task.Delay(10000).ConfigureAwait(false);
+            this.ExpectedAPIResponse = this.CommonAction.GetResource("ExpectedAPIResponse");
+            this.ExpectedAPIResponse = this.ExpectedAPIResponse.Replace("{CanonicalName}", this.JobProfile.CanonicalName, StringComparison.InvariantCulture);
         }
 
         [OneTimeTearDown]
@@ -49,6 +58,8 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
             messageBody = this.CommonAction.ConvertObjectToByteArray(jobProfileDelete);
             message = new MessageFactory().Create(this.JobProfile.JobProfileId, messageBody, "Deleted", "JobProfile");
             await this.ServiceBus.SendMessage(message).ConfigureAwait(false);
+
+            this.LogFile.Dispose();
         }
     }
 }

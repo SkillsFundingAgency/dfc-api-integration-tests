@@ -35,5 +35,19 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support.CommonActions
             var content = streamReader.ReadToEnd();
             return JsonConvert.DeserializeObject<T>(content);
         }
+
+        public string GetResource(string resourceName)
+        {
+            var resourcesDirectory = Directory.CreateDirectory(Environment.CurrentDirectory).GetDirectories("Resource")[0];
+            var files = resourcesDirectory.GetFiles();
+            var selectedResource = files.FirstOrDefault(file => file.Name.ToUpperInvariant().StartsWith(resourceName.ToUpperInvariant(), StringComparison.OrdinalIgnoreCase));
+            if (selectedResource == null)
+            {
+                throw new Exception($"No resource with the name {resourceName} was found");
+            }
+
+            using var streamReader = new StreamReader(selectedResource.FullName);
+            return streamReader.ReadToEnd();
+        }
     }
 }
