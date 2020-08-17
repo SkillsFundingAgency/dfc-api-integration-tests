@@ -43,6 +43,9 @@
     <None Update="appsettings.template.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resource\ExpectedAPIResponse.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resource\JobProfileTemplate.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

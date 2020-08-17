@@ -10,6 +10,8 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
 {
     public class SetUpAndTearDown : SetUpAndTearDownBase
     {
+        protected string ExpectedAPIResponse { get; set; }
+
         protected JobProfileContentType WakeUpJobProfile { get; set; }
 
         protected JobProfileContentType JobProfile { get; set; }
@@ -38,6 +40,8 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
             message = new MessageFactory().Create(this.JobProfile.JobProfileId, jobProfileMessageBody, "Published", "JobProfile");
             await this.ServiceBus.SendMessage(message).ConfigureAwait(false);
             await Task.Delay(10000).ConfigureAwait(false);
+            this.ExpectedAPIResponse = this.CommonAction.GetResource("ExpectedAPIResponse");
+            this.ExpectedAPIResponse = this.ExpectedAPIResponse.Replace("{CanonicalName}", this.JobProfile.CanonicalName, StringComparison.InvariantCulture);
         }
 
         [OneTimeTearDown]
@@ -54,6 +58,8 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
             messageBody = this.CommonAction.ConvertObjectToByteArray(jobProfileDelete);
             message = new MessageFactory().Create(this.JobProfile.JobProfileId, messageBody, "Deleted", "JobProfile");
             await this.ServiceBus.SendMessage(message).ConfigureAwait(false);
+
+            this.LogFile.Dispose();
         }
     }
 }
