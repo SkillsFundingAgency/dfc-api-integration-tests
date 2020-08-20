@@ -41,7 +41,8 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
             await this.ServiceBus.SendMessage(message).ConfigureAwait(false);
             await Task.Delay(10000).ConfigureAwait(false);
             this.ExpectedAPIResponse = this.CommonAction.GetResource("ExpectedAPIResponse");
-            this.ExpectedAPIResponse = this.ExpectedAPIResponse.Replace("{CanonicalName}", this.JobProfile.CanonicalName, StringComparison.InvariantCulture);
+            this.ExpectedAPIResponse = this.ExpectedAPIResponse.Replace("{jobProfileDetailsUrl}", $"{this.AppSettings.APIConfig.EndpointBaseUrl.ProfileDetail}", StringComparison.InvariantCulture);
+            this.ExpectedAPIResponse = this.ExpectedAPIResponse.Replace("{CanonicalName}", $"{this.JobProfile.CanonicalName}", StringComparison.InvariantCulture);
         }
 
         [OneTimeTearDown]
