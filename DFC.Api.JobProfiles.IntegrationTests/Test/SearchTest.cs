@@ -56,6 +56,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
         {
             const int expectedPageNumber = 2;
             var response = await this.authorisedApiWithQueryParameters.GetByName<JobProfileSearchAPIResponse>("nurse").ConfigureAwait(false);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, "Job profile search: The service should report a successful request.");
             Assert.AreEqual(expectedPageNumber, response.Data.CurrentPage, "Job profile search: The service returned an unexpected page parameter.");
         }
 

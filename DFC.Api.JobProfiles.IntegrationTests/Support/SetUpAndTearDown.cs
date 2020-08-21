@@ -1,4 +1,5 @@
 ﻿using DFC.Api.JobProfiles.IntegrationTests.Model.ContentType.JobProfile;
+using DFC.Api.JobProfiles.IntegrationTests.Model.Support;
 using DFC.Api.JobProfiles.IntegrationTests.Support.AzureServiceBus;
 using DFC.Api.JobProfiles.IntegrationTests.Support.AzureServiceBus.ServiceBusFactory;
 using NUnit.Framework;
@@ -10,7 +11,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
 {
     public class SetUpAndTearDown : SetUpAndTearDownBase
     {
-        protected string ExpectedAPIResponse { get; set; }
+        protected ExpectedResponse ExpectedAPIResponse { get; set; }
 
         protected JobProfileContentType WakeUpJobProfile { get; set; }
 
@@ -40,8 +41,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Support
             message = new MessageFactory().Create(this.JobProfile.JobProfileId, jobProfileMessageBody, "Published", "JobProfile");
             await this.ServiceBus.SendMessage(message).ConfigureAwait(false);
             await Task.Delay(10000).ConfigureAwait(false);
-            this.ExpectedAPIResponse = this.CommonAction.GetResource("ExpectedAPIResponse");
-            this.ExpectedAPIResponse = this.ExpectedAPIResponse.Replace("{CanonicalName}", this.JobProfile.CanonicalName, StringComparison.InvariantCulture);
+            this.ExpectedAPIResponse = new ExpectedResponse(this.CommonAction.GetResource("ExpectedAPIResponse"));
         }
 
         [OneTimeTearDown]

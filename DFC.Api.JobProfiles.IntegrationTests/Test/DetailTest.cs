@@ -4,7 +4,6 @@ using DFC.Api.JobProfiles.IntegrationTests.Support;
 using DFC.Api.JobProfiles.IntegrationTests.Support.API;
 using DFC.Api.JobProfiles.IntegrationTests.Support.API.RestFactory;
 using NUnit.Framework;
-using System.Globalization;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -23,10 +22,11 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
             {
                 APIConfig = new APIConfig
                 {
-                    ApimSubscriptionKey = this.CommonAction.RandomString(10),
+                    ApimSubscriptionKey = "unauthorised-apim-key",
                     Version = this.AppSettings.APIConfig.Version,
                 },
             };
+
             this.authorisedApi = new JobProfileApi(new RestClientFactory(), new RestRequestFactory(), this.AppSettings, apiSettings);
             this.unauthorisedApi = new JobProfileApi(new RestClientFactory(), new RestRequestFactory(), tempAppSettings, apiSettings);
         }
@@ -35,7 +35,8 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
         public async Task SuccessfulJobDetailsRequest()
         {
             var apiResponse = await this.authorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.JobProfile.CanonicalName).ConfigureAwait(false);
-            Assert.AreEqual(this.ExpectedAPIResponse, apiResponse.Content);
+            Assert.AreEqual(HttpStatusCode.OK, apiResponse.StatusCode, "Job details: The service should report a successful request.");
+            Assert.AreEqual(this.ExpectedAPIResponse.JobProfileDetails(this.AppSettings.APIConfig.EndpointBaseUrl.ProfileDetail, this.JobProfile.CanonicalName), apiResponse.Content);
         }
 
         [Test]
