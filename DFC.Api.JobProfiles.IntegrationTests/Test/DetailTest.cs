@@ -36,7 +36,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
         {
             var apiResponse = await this.authorisedApi.GetByName<JobProfileDetailsAPIResponse>(this.JobProfile.CanonicalName).ConfigureAwait(false);
             Assert.AreEqual(HttpStatusCode.OK, apiResponse.StatusCode, "Job details: The service should report a successful request.");
-            Assert.AreEqual(this.ExpectedAPIResponse, apiResponse.Content);
+            Assert.AreEqual(this.ExpectedAPIResponse.JobProfileDetails(this.AppSettings.APIConfig.EndpointBaseUrl.ProfileDetail, this.JobProfile.CanonicalName), apiResponse.Content);
         }
 
         [Test]
