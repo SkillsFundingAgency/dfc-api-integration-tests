@@ -34,6 +34,7 @@ namespace DFC.Api.JobProfiles.IntegrationTests.Test
         {
             var response = await this.authorisedApi.GetSummaries().ConfigureAwait(false);
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, "Job profile summary: Unable to search job profile summaries.");
+            Assert.IsTrue(response.Data.Count > 0);
         }
 
         [Test]

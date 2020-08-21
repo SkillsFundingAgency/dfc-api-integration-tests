@@ -3,7 +3,6 @@ using DFC.Api.JobProfiles.IntegrationTests.Model.Support;
 using DFC.Api.JobProfiles.IntegrationTests.Support.AzureServiceBus;
 using DFC.Api.JobProfiles.IntegrationTests.Support.AzureServiceBus.ServiceBusFactory;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using System;
 using System.Threading.Tasks;
 
